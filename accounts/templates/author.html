@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title%}Author Page{% endblock %}
+{% block content%}
+<style>
+    /* CSS for the grid layout */
+    .articles-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .article-block {
+        width: 30%;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    .article-image {
+        width: 30%;
+        height: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
+        padding-bottom: 5%;
+    }
+</style>
+<div style="display: flex; justify-content: center;">
+
+    <h1 style="margin:2rem;">List of Articles</h1>
+</div>
+{% for article in articles %}
+<div class="card mb-3">
+
+    <div class="card-body">
+        <h5 class="card-title">{{ article.article_title }}</h5>
+        <p class="card-text">{{ article.subtitle }}</p>
+    </div>
+    <img src="../media/{{article.file_url}}" alt="{{ article.article_title }}" class="card-img-bottom article-image">
+    <p class="card-text">{{article.description}}</p>
+
+
+</div>
+{% endfor %}
+
+
+<img id="previewImage" src="#" alt="Preview Image" style="display: none;" onchange="previewImage(event)">
+
+
+
+<script>
+    function previewImage(event) {
+        var previewImage = document.getElementById('previewImage');
+        console.log(previewImage)
+        var fileInput = event.target;
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.src = '';
+            previewImage.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}List Of Users{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: center;">
+
+  <h1 style="margin:2rem;">List of Users</h1>
+</div>
+{% if users %}
+<ul>
+  <table class="table table-striped table-dark table-bordered" style="border-color: white;">
+    <thead>
+      <tr>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      {% for user in users %}
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td style="display: flex; justify-content: center;">
+
+          <button type="button" class="btn btn-danger" id="delete-btn-1"
+            onclick="deleteView(`{{ user.email }}`)">Delete</button>
+
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</ul>
+
+{% else %}
+<p>No users found.</p>
+{% endif %}
+
+<script>
+  function deleteView(email) {
+    fetch('/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}', // Add the CSRF token from Django
+      }, body: JSON.stringify({ 'email': email })
+    })
+      .then(response => window.location.reload())
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+</script>
+
+{% endblock %}
